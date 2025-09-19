@@ -193,13 +193,13 @@ export default function UserInfo() {
         {/* Opciones */}
         <DropdownMenuItem onClick={handleViewOnExplorer} className="text-white hover:bg-gray-800">
           <ExternalLink className="mr-2 h-4 w-4" />
-          View on Warpcast
+          Farcaster
         </DropdownMenuItem>
         
         {walletAddress && (
           <DropdownMenuItem onClick={handleViewWalletOnExplorer} className="text-white hover:bg-gray-800">
             <ExternalLink className="mr-2 h-4 w-4" />
-            View Wallet on BaseScan
+            Basescan
           </DropdownMenuItem>
         )}
         

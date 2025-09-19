@@ -18,7 +18,7 @@ export const env = createEnv({
   },
 
 client: {
-    NEXT_PUBLIC_URL: z.string().min(1).optional().default("https://entity-terrorism-innovations-enhancements.trycloudflare.com"),
+    NEXT_PUBLIC_URL: z.string().min(1).optional().default("https://baseanalizer.vercel.app"),
     NEXT_PUBLIC_APP_ENV: z
       .enum(["development", "production"])
       .optional()

@@ -1,0 +1,28 @@
+{
+  "functions": {
+    "app/api/analyze/route.ts": {
+      "maxDuration": 30
+    },
+    "app/api/profile/route.ts": {
+      "maxDuration": 15
+    },
+    "app/base/[address]/opengraph-image.tsx": {
+      "maxDuration": 10
+    }
+  },
+  "headers": [
+    {
+      "source": "/base/(.*)/opengraph-image",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        },
+        {
+          "key": "ETag",
+          "value": "strong"
+        }
+      ]
+    }
+  ]
+}

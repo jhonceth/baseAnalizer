@@ -6,7 +6,7 @@ import { env } from "@/lib/env";
  * @returns The farcaster manifest for the frame
  */
 export async function getFarcasterManifest() {
-  let frameName = "Create ZoraCoin";
+  let frameName = "Base Analytics";
   let noindex = false;
    const appUrl = env.NEXT_PUBLIC_URL || 'http://localhost:3000';
   

@@ -197,15 +197,19 @@ function calculateEthStats(txlist: BaseTransaction[], txlistinternal: BaseTransa
 
 // Función para formatear Active Age como Basescan
 function formatActiveAge(days: number): string {
-  if (days < 1) return 'Less than 1 day';
+  if (days < 1) return '<1d';
   
   const years = Math.floor(days / 365);
   const remainingDays = days % 365;
   
   if (years > 0) {
-    return `${years} Year${years > 1 ? 's' : ''} ${remainingDays} Day${remainingDays !== 1 ? 's' : ''}`;
+    if (remainingDays === 0) {
+      return `${years}y`;
+    } else {
+      return `${years}y ${remainingDays}d`;
+    }
   } else {
-    return `${days} Day${days !== 1 ? 's' : ''}`;
+    return `${days}d`;
   }
 }
 

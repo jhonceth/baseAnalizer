@@ -172,12 +172,12 @@ export default function WalletAnalyzer() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-600 to-blue-600">
       {/* Header */}
-      <div className="bg-white/10 backdrop-blur-sm border-b border-white/20 relative z-20">
+      <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-sm border-b border-blue-400/30 relative z-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
-                <span className="text-purple-600 font-bold text-lg">BA</span>
+              <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-lg">
+                <span className="text-blue-600 font-bold text-lg">BA</span>
               </div>
               <h1 className="text-2xl font-bold text-white">Base Analytics</h1>
             </div>
@@ -186,7 +186,7 @@ export default function WalletAnalyzer() {
             <div className="flex items-center space-x-3">
                   <button
                     onClick={shareApp}
-                    className="p-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg transition-colors flex items-center justify-center"
+                    className="p-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors flex items-center justify-center shadow-lg hover:shadow-blue-500/25"
                     title="Share App"
                   >
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -211,21 +211,21 @@ export default function WalletAnalyzer() {
             <select
               value={selectedWallet}
               onChange={(e) => setSelectedWallet(e.target.value)}
-              className="flex-1 px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-purple-500 relative z-10"
+              className="flex-1 px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 relative z-10"
             >
-              <option value="">Choose a wallet...</option>
+              <option value="" className="text-gray-300 bg-gray-800">Choose a wallet...</option>
               {allWallets.map((wallet, index) => (
-                <option key={index} value={wallet} className="text-black">
-                  {formatWalletAddress(wallet)} {wallet === connectedWallet ? '(Conectada)' : ''}
+                <option key={index} value={wallet} className="text-white bg-gray-800">
+                  {formatWalletAddress(wallet)} {wallet === connectedWallet ? '(Connected)' : ''}
                 </option>
               ))}
             </select>
             <button
               onClick={() => analyzeWallet(selectedWallet)}
               disabled={!selectedWallet || loading}
-              className="px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-semibold transition-all duration-200"
+              className="px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-semibold transition-all duration-200 border-2 border-purple-400 hover:border-purple-300 shadow-lg hover:shadow-purple-500/25 hover:shadow-xl"
             >
-              {loading ? "Analyzing..." : "Analyze Wallet"}
+              {loading ? "Analyzing..." : "Analyze Address"}
             </button>
           </div>
         </div>
@@ -251,18 +251,18 @@ export default function WalletAnalyzer() {
         {result && (
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6">
             {/* Título MY BASE ACTIVITY */}
-            <div className="text-center mb-8 mt-8 pt-4">
-              <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 uppercase tracking-wider">
+            <div className="text-center mb-6 mt-2">
+              <h2 className="text-2xl sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 uppercase tracking-wider whitespace-nowrap">
                 MY BASE ACTIVITY
               </h2>
             </div>
             
             {/* Advanced Statistics */}
-            <div className="space-y-6">
+            <div className="space-y-4">
               {/* Primera fila - Transaction Count y Active Age */}
-              <div className="flex justify-center gap-6">
+              <div className="flex justify-between gap-2">
                 {/* Transaction Count */}
-                <div className="w-2/5 bg-gradient-to-br from-purple-600/30 to-blue-600/30 backdrop-blur-sm rounded-xl p-4 text-center border border-purple-500/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                <div className="flex-1 bg-gradient-to-br from-purple-600/30 to-blue-600/30 backdrop-blur-sm rounded-xl p-5 text-center border border-purple-500/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                   <div className="flex justify-center mb-2">
                     <div className="w-8 h-8 bg-gradient-to-br from-purple-400 to-blue-400 rounded-full flex items-center justify-center">
                       <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -276,7 +276,7 @@ export default function WalletAnalyzer() {
                 </div>
                 
                 {/* Active Age */}
-                <div className="w-2/5 bg-gradient-to-br from-green-600/30 to-teal-600/30 backdrop-blur-sm rounded-xl p-4 text-center border border-green-500/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                <div className="flex-1 bg-gradient-to-br from-green-600/30 to-teal-600/30 backdrop-blur-sm rounded-xl p-5 text-center border border-green-500/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                   <div className="flex justify-center mb-2">
                     <div className="w-8 h-8 bg-gradient-to-br from-green-400 to-teal-400 rounded-full flex items-center justify-center">
                       <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -291,9 +291,9 @@ export default function WalletAnalyzer() {
               </div>
               
               {/* Segunda fila - Unique Days Active y Longest Streak */}
-              <div className="flex justify-center gap-6">
+              <div className="flex justify-between gap-2">
                 {/* Unique Days Active */}
-                <div className="w-2/5 bg-gradient-to-br from-orange-600/30 to-red-600/30 backdrop-blur-sm rounded-xl p-4 text-center border border-orange-500/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                <div className="flex-1 bg-gradient-to-br from-orange-600/30 to-red-600/30 backdrop-blur-sm rounded-xl p-5 text-center border border-orange-500/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                   <div className="flex justify-center mb-2">
                     <div className="w-8 h-8 bg-gradient-to-br from-orange-400 to-red-400 rounded-full flex items-center justify-center">
                       <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -307,7 +307,7 @@ export default function WalletAnalyzer() {
                 </div>
                 
                 {/* Longest Streak */}
-                <div className="w-2/5 bg-gradient-to-br from-indigo-600/30 to-purple-600/30 backdrop-blur-sm rounded-xl p-4 text-center border border-indigo-500/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                <div className="flex-1 bg-gradient-to-br from-indigo-600/30 to-purple-600/30 backdrop-blur-sm rounded-xl p-5 text-center border border-indigo-500/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                   <div className="flex justify-center mb-2">
                     <div className="w-8 h-8 bg-gradient-to-br from-indigo-400 to-purple-400 rounded-full flex items-center justify-center">
                       <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -344,6 +344,23 @@ export default function WalletAnalyzer() {
             </div>
           </div>
         )}
+
+        {/* Footer */}
+        <div className="mt-12 pt-6 border-t border-white/10">
+          <div className="text-center">
+            <p className="text-sm text-gray-400">
+              App developed by{' '}
+              <a 
+                href="https://farcaster.xyz/jobit.eth" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-purple-400 hover:text-purple-300 transition-colors duration-200 font-medium"
+              >
+                @jobit.eth
+              </a>
+            </p>
+          </div>
+        </div>
 
       </div>
     </div>

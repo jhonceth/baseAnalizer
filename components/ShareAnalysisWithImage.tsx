@@ -101,29 +101,37 @@ export default function ShareAnalysisWithImage({ result, onShare }: ShareAnalysi
 
   return (
     <div className="mt-6 text-center">
-      <Button
-        onClick={handleShareWithCustomImage}
-        disabled={isGenerating || isSharing}
-        className="px-6 py-3 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-lg hover:from-purple-600 hover:to-blue-600 font-semibold transition-all duration-200 flex items-center gap-2 mx-auto"
-      >
-        {isGenerating ? (
-          <>
-            <Loader2 className="w-5 h-5 animate-spin" />
-            Generating Image...
-          </>
-        ) : isSharing ? (
-          <>
-            <Loader2 className="w-5 h-5 animate-spin" />
-            Sharing...
-          </>
-        ) : (
-          <>
-            <img src="/images/farcaster.png" alt="Farcaster" className="w-5 h-5" />
-            <Share2 className="w-5 h-5" />
-            Analysis
-          </>
-        )}
-      </Button>
+      <div className="relative group">
+        <Button
+          onClick={handleShareWithCustomImage}
+          disabled={isGenerating || isSharing}
+          className="px-8 py-4 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white rounded-xl hover:from-pink-600 hover:via-purple-600 hover:to-blue-600 font-bold text-lg transition-all duration-300 flex items-center gap-3 mx-auto shadow-lg hover:shadow-xl hover:scale-105 transform"
+        >
+          {isGenerating ? (
+            <>
+              <Loader2 className="w-6 h-6 animate-spin" />
+              Generating Image...
+            </>
+          ) : isSharing ? (
+            <>
+              <Loader2 className="w-6 h-6 animate-spin" />
+              Sharing...
+            </>
+          ) : (
+            <>
+              <img src="/images/farcaster.png" alt="Farcaster" className="w-6 h-6" />
+              <Share2 className="w-6 h-6" />
+              Share Analysis
+            </>
+          )}
+        </Button>
+        
+        {/* Tooltip */}
+        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+          Share your Base analytics on Farcaster
+          <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+        </div>
+      </div>
       
       {isGenerating && (
         <p className="text-sm text-gray-300 mt-2">
