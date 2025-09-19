@@ -141,7 +141,7 @@ async function fetchTransactions(address: string, action: string, apiKey: string
 
 // Función auxiliar para una sola consulta
 async function fetchTransactionsSingle(address: string, action: string, apiKey: string, startblock = 0, endblock = 50000000, sort = 'asc') {
-  const url = `${config.BASESCAN_API_URL}?module=account&action=${action}&address=${address}&startblock=${startblock}&endblock=${endblock}&sort=${sort}&apikey=${apiKey}`;
+  const url = `${config.BASESCAN_API_URL}?chainid=8453&module=account&action=${action}&address=${address}&startblock=${startblock}&endblock=${endblock}&sort=${sort}&apikey=${apiKey}`;
   
   try {
     const data = await fetchWithRetry(url);
