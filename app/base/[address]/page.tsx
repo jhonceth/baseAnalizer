@@ -6,6 +6,9 @@ interface PageProps {
   params: {
     address: string;
   };
+  searchParams: {
+    t?: string;
+  };
 }
 
 // Función para validar dirección Ethereum
@@ -24,8 +27,9 @@ async function getAnalysisData(address: string) {
   };
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
   const { address } = params;
+  const { t } = searchParams;
   
   // Validar dirección
   if (!isValidEthereumAddress(address)) {
@@ -49,15 +53,19 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const shortAddress = `${address.slice(0, 6)}...${address.slice(-4)}`;
     const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
     
+    // Agregar timestamp a la URL de la imagen OG para evitar caché
+    const timestamp = t || Date.now().toString();
+    const imageUrl = `${baseUrl}/base/${address}/opengraph-image?t=${timestamp}`;
+    
     // Crear Frame de Farcaster según la documentación oficial
     const miniappFrame = {
       version: "1",
-      imageUrl: `${baseUrl}/base/${address}/opengraph-image`,
+      imageUrl: imageUrl,
       button: {
         title: "📊 Analyze Wallet",
         action: {
           type: "launch_miniapp",
-          url: `${baseUrl}/base/${address}`,
+          url: `${baseUrl}/`, // Apuntar a la URL principal
           name: "Base Analytics",
           splashImageUrl: `${baseUrl}/images/splash.png`,
           splashBackgroundColor: "#6D28D9",
@@ -75,7 +83,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         url: `${baseUrl}/base/${address}`,
         images: [
           {
-            url: `${baseUrl}/base/${address}/opengraph-image`,
+            url: imageUrl,
             width: 1200,
             height: 800,
             alt: `Base Analytics for ${shortAddress}`,
@@ -86,7 +94,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         card: 'summary_large_image',
         title: `Base Analytics - ${shortAddress}`,
         description: `Analyze Base wallet transactions and activity patterns for ${shortAddress}`,
-        images: [`${baseUrl}/base/${address}/opengraph-image`],
+        images: [imageUrl],
       },
       // Frame de Farcaster - esto es lo que hace que aparezca el botón
       other: {
@@ -104,8 +112,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
-export default async function BaseAddressPage({ params }: PageProps) {
+export default async function BaseAddressPage({ params, searchParams }: PageProps) {
   const { address } = params;
+  const { t } = searchParams;
   
   // Validar dirección
   if (!isValidEthereumAddress(address)) {

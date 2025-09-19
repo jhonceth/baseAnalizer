@@ -6,13 +6,40 @@ import { useState } from "react";
 export default function ActivityHeatmap({ data }: { data: { [key: string]: number } }) {
   const [tooltip, setTooltip] = useState<{ x: number; y: number; date: string; count: number } | null>(null);
 
-  // Generar los últimos 8 meses
-  const generateLast8Months = () => {
+  // Generar solo los meses que tienen datos de transacciones
+  const generateMonthsWithData = () => {
     const months = [];
-    const now = new Date();
+    const dataDates = Object.keys(data);
     
-    for (let i = 7; i >= 0; i--) {
-      const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    if (dataDates.length === 0) {
+      // Si no hay datos, mostrar solo el mes actual
+      const now = new Date();
+      months.push({
+        year: now.getFullYear(),
+        month: now.getMonth(),
+        monthName: now.toLocaleDateString('en-US', { month: 'short' })
+      });
+      return months;
+    }
+    
+    // Encontrar la fecha más antigua y más reciente en los datos
+    const oldestDate = new Date(Math.min(...dataDates.map(date => new Date(date).getTime())));
+    const newestDate = new Date(Math.max(...dataDates.map(date => new Date(date).getTime())));
+    
+    // Generar meses desde la fecha más reciente hasta la más antigua (orden ascendente)
+    const startDate = new Date(newestDate.getFullYear(), newestDate.getMonth(), 1);
+    const endDate = new Date(oldestDate.getFullYear(), oldestDate.getMonth(), 1);
+    
+    // Calcular la diferencia en meses
+    const diffInMonths = (startDate.getFullYear() - endDate.getFullYear()) * 12 + 
+                        (startDate.getMonth() - endDate.getMonth());
+    
+    // Limitar a máximo 8 meses para mantener la UI limpia
+    const monthsToShow = Math.min(diffInMonths + 1, 8);
+    
+    // Generar meses desde la fecha más reciente hacia atrás
+    for (let i = 0; i < monthsToShow; i++) {
+      const date = new Date(startDate.getFullYear(), startDate.getMonth() - i, 1);
       months.push({
         year: date.getFullYear(),
         month: date.getMonth(),
@@ -80,38 +107,50 @@ export default function ActivityHeatmap({ data }: { data: { [key: string]: numbe
     return 'bg-green-300';
   };
 
-  const months = generateLast8Months();
+  const months = generateMonthsWithData();
   const maxCount = Math.max(...Object.values(data), 1);
 
   return (
-    <div className="bg-white/5 rounded-lg p-4">
+    <div className="w-full">
+      {/* Título dinámico con rango de fechas */}
+      <div className="text-center mb-4">
+        <h4 className="text-sm font-semibold text-black">
+          Activity Heatmap
+          {months.length > 0 && (
+            <span className="text-xs text-gray-600 ml-2">
+              ({months[0].monthName} {months[0].year} - {months[months.length - 1].monthName} {months[months.length - 1].year})
+            </span>
+          )}
+        </h4>
+      </div>
+
       {/* Leyenda */}
       <div className="flex items-center justify-between mb-4">
-        <div className="text-xs text-gray-400">Less</div>
+        <div className="text-xs text-black">Less</div>
         <div className="flex gap-1">
-          <div className="w-2 h-2 bg-gray-800 rounded-sm"></div>
-          <div className="w-2 h-2 bg-green-600 rounded-sm"></div>
-          <div className="w-2 h-2 bg-green-500 rounded-sm"></div>
-          <div className="w-2 h-2 bg-green-400 rounded-sm"></div>
-          <div className="w-2 h-2 bg-green-300 rounded-sm"></div>
+          <div className="w-3 h-3 bg-gray-800 rounded-sm"></div>
+          <div className="w-3 h-3 bg-green-600 rounded-sm"></div>
+          <div className="w-3 h-3 bg-green-500 rounded-sm"></div>
+          <div className="w-3 h-3 bg-green-400 rounded-sm"></div>
+          <div className="w-3 h-3 bg-green-300 rounded-sm"></div>
         </div>
-        <div className="text-xs text-gray-400">More</div>
+        <div className="text-xs text-black">More</div>
       </div>
 
       {/* Calendario organizado por meses */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2 sm:gap-4 w-full">
         {months.map(({ year, month, monthName }, monthIndex) => {
           const weeks = generateDaysInMonth(year, month);
           
           return (
             <div key={`${year}-${month}`} className="text-center">
               {/* Nombre del mes */}
-              <div className="text-sm font-medium text-white mb-2">{monthName} {year}</div>
+              <div className="text-sm font-medium text-black mb-2">{monthName} {year}</div>
               
               {/* Días de la semana */}
               <div className="grid grid-cols-7 gap-1 mb-1">
                 {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(day => (
-                  <div key={day} className="text-xs text-gray-500 text-center py-1">{day}</div>
+                  <div key={day} className="text-xs text-black text-center py-1">{day}</div>
                 ))}
               </div>
               
@@ -125,7 +164,7 @@ export default function ActivityHeatmap({ data }: { data: { [key: string]: numbe
                         return (
                           <div
                             key={dayIndex}
-                            className="w-2 h-2 rounded-sm bg-transparent"
+                            className="w-3 h-3 rounded-sm bg-transparent"
                           />
                         );
                       }
@@ -138,7 +177,7 @@ export default function ActivityHeatmap({ data }: { data: { [key: string]: numbe
                       return (
                         <div
                           key={dayIndex}
-                          className={`w-2 h-2 rounded-sm ${colorClass} hover:ring-1 hover:ring-blue-400 cursor-pointer transition-all ${
+                          className={`w-3 h-3 rounded-sm ${colorClass} hover:ring-1 hover:ring-blue-400 cursor-pointer transition-all ${
                             !isCurrentMonth ? 'opacity-30' : ''
                           }`}
                           title={`${new Date(dateString).toLocaleDateString('en-US')}: ${count} transaction${count !== 1 ? 's' : ''}`}

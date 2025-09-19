@@ -7,6 +7,7 @@ import UserInfo from "./UserInfo";
 import ActivityHeatmap from "./ActivityHeatmap";
 import ShareAnalysisWithImage from "./ShareAnalysisWithImage";
 import { sdk } from "@farcaster/miniapp-sdk";
+import { useUserWallets } from "@/hooks/use-user-wallets";
 
 interface AnalysisResult {
   address: string;
@@ -32,53 +33,28 @@ interface AnalysisResult {
 export default function WalletAnalyzer() {
   const { isInFarcaster, isLoading, userInfo } = useFarcasterContext();
   const { address } = useAccount();
+  const { allWallets, connectedWallet, isLoading: walletsLoading } = useUserWallets(userInfo);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [selectedWallet, setSelectedWallet] = useState<string>("");
-  const [connectedWallets, setConnectedWallets] = useState<Array<{address: string, platform: string, name: string}>>([]);
 
-  // Cargar wallets cuando el contexto de Farcaster esté listo
+  // Establecer la wallet conectada como seleccionada cuando esté disponible
   useEffect(() => {
-    const loadWallets = async () => {
-      console.log("🔍 loadWallets called:", { isLoading, isInFarcaster, userInfo });
-      
-      if (!isLoading && isInFarcaster) {
-        try {
-          console.log("🔍 Checking SDK in WalletAnalyzer:", {
-            hasWallet: !!sdk.wallet,
-            hasEthProvider: !!(sdk.wallet && sdk.wallet.ethProvider)
-          });
-          
-          // Obtener wallet primaria directamente del SDK
-          if (sdk.wallet && sdk.wallet.ethProvider) {
-            console.log("🔍 Requesting eth_accounts from WalletAnalyzer...");
-            const accounts = await sdk.wallet.ethProvider.request({ method: 'eth_accounts' });
-            console.log("🔍 eth_accounts response in WalletAnalyzer:", accounts);
-            
-            if (accounts && accounts.length > 0) {
-              const primaryWallet = accounts[0];
-              console.log("✅ Setting connected wallets with:", primaryWallet);
-              
-              setConnectedWallets([{
-                address: primaryWallet,
-                platform: "Farcaster",
-                name: userInfo?.displayName || userInfo?.username || "Farcaster User"
-              }]);
-              // Auto-seleccionar la wallet primaria
-              setSelectedWallet(primaryWallet);
-            }
-          } else {
-            console.log("⚠️ SDK wallet not available in WalletAnalyzer");
-          }
-        } catch (error) {
-          console.log("Error obteniendo wallets del SDK:", error);
-        }
-      }
-    };
+    if (connectedWallet && !selectedWallet) {
+      console.log("🔄 Estableciendo wallet conectada como seleccionada:", connectedWallet);
+      setSelectedWallet(connectedWallet);
+    }
+  }, [connectedWallet, selectedWallet]);
 
-    loadWallets();
-  }, [isLoading, isInFarcaster, userInfo]);
+  // Limpiar estadísticas cuando cambie la wallet seleccionada (solo si ya hay resultados)
+  useEffect(() => {
+    if (selectedWallet && result && result.address !== selectedWallet) {
+      console.log("🔄 Wallet seleccionada cambió, limpiando estadísticas:", selectedWallet);
+      setResult(null);
+      setError("");
+    }
+  }, [selectedWallet, result]);
 
   // Función para analizar una wallet
   const analyzeWallet = async (walletAddress?: string) => {
@@ -238,9 +214,9 @@ export default function WalletAnalyzer() {
               className="flex-1 px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-purple-500 relative z-10"
             >
               <option value="">Choose a wallet...</option>
-              {connectedWallets.map((wallet, index) => (
-                <option key={index} value={wallet.address} className="text-black">
-                  {wallet.name} ({formatWalletAddress(wallet.address)})
+              {allWallets.map((wallet, index) => (
+                <option key={index} value={wallet} className="text-black">
+                  {formatWalletAddress(wallet)} {wallet === connectedWallet ? '(Conectada)' : ''}
                 </option>
               ))}
             </select>
@@ -274,48 +250,89 @@ export default function WalletAnalyzer() {
         {/* Results */}
         {result && (
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6">
+            {/* Título MY BASE ACTIVITY */}
+            <div className="text-center mb-8 mt-8 pt-4">
+              <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 uppercase tracking-wider">
+                MY BASE ACTIVITY
+              </h2>
+            </div>
+            
             {/* Advanced Statistics */}
-            <div className="grid grid-cols-2 gap-3 mb-6">
-              {/* Transaction Count */}
-              <div className="bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded-lg p-3 text-center">
-                <div className="text-lg font-bold text-white">{result.counts.total || 0}</div>
-                <div className="text-xs text-gray-300 mb-1">Transaction Count</div>
-                <div className="text-xs text-gray-400">Since {result.advancedStats.sinceFormatted || 'N/A'}</div>
+            <div className="space-y-6">
+              {/* Primera fila - Transaction Count y Active Age */}
+              <div className="flex justify-center gap-6">
+                {/* Transaction Count */}
+                <div className="w-2/5 bg-gradient-to-br from-purple-600/30 to-blue-600/30 backdrop-blur-sm rounded-xl p-4 text-center border border-purple-500/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                  <div className="flex justify-center mb-2">
+                    <div className="w-8 h-8 bg-gradient-to-br from-purple-400 to-blue-400 rounded-full flex items-center justify-center">
+                      <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div className="text-2xl font-bold text-white mb-1">{result.counts.total || 0}</div>
+                  <div className="text-sm font-semibold text-purple-200 mb-1">Transaction Count</div>
+                  <div className="text-xs text-gray-300">Since {result.advancedStats.sinceFormatted || 'N/A'}</div>
+                </div>
+                
+                {/* Active Age */}
+                <div className="w-2/5 bg-gradient-to-br from-green-600/30 to-teal-600/30 backdrop-blur-sm rounded-xl p-4 text-center border border-green-500/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                  <div className="flex justify-center mb-2">
+                    <div className="w-8 h-8 bg-gradient-to-br from-green-400 to-teal-400 rounded-full flex items-center justify-center">
+                      <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div className="text-xl font-bold text-white mb-1">{result.advancedStats.activeAgeFormatted || 'N/A'}</div>
+                  <div className="text-sm font-semibold text-green-200 mb-1">Active Age</div>
+                  <div className="text-xs text-gray-300">Since {result.advancedStats.sinceFormatted || 'N/A'}</div>
+                </div>
               </div>
               
-              {/* Active Age */}
-              <div className="bg-gradient-to-br from-green-500/20 to-teal-500/20 rounded-lg p-3 text-center">
-                <div className="text-sm font-bold text-white">{result.advancedStats.activeAgeFormatted || 'N/A'}</div>
-                <div className="text-xs text-gray-300 mb-1">Active Age</div>
-                <div className="text-xs text-gray-400">Since {result.advancedStats.sinceFormatted || 'N/A'}</div>
-              </div>
-              
-              {/* Unique Days Active */}
-              <div className="bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-lg p-3 text-center">
-                <div className="text-sm font-bold text-white">{result.advancedStats.uniqueDays || 0} Days</div>
-                <div className="text-xs text-gray-300 mb-1">Unique Days Active</div>
-                <div className="text-xs text-gray-400">Since {result.advancedStats.sinceFormatted || 'N/A'}</div>
-              </div>
-              
-              {/* Longest Streak */}
-              <div className="bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-lg p-3 text-center">
-                <div className="text-sm font-bold text-white">{result.advancedStats.longestStreak || 0} Days</div>
-                <div className="text-xs text-gray-300 mb-1">Longest Streak</div>
-                <div className="text-xs text-gray-400">Since {result.advancedStats.sinceFormatted || 'N/A'}</div>
+              {/* Segunda fila - Unique Days Active y Longest Streak */}
+              <div className="flex justify-center gap-6">
+                {/* Unique Days Active */}
+                <div className="w-2/5 bg-gradient-to-br from-orange-600/30 to-red-600/30 backdrop-blur-sm rounded-xl p-4 text-center border border-orange-500/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                  <div className="flex justify-center mb-2">
+                    <div className="w-8 h-8 bg-gradient-to-br from-orange-400 to-red-400 rounded-full flex items-center justify-center">
+                      <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div className="text-xl font-bold text-white mb-1">{result.advancedStats.uniqueDays || 0}</div>
+                  <div className="text-sm font-semibold text-orange-200 mb-1">Unique Days Active</div>
+                  <div className="text-xs text-gray-300">Since {result.advancedStats.sinceFormatted || 'N/A'}</div>
+                </div>
+                
+                {/* Longest Streak */}
+                <div className="w-2/5 bg-gradient-to-br from-indigo-600/30 to-purple-600/30 backdrop-blur-sm rounded-xl p-4 text-center border border-indigo-500/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                  <div className="flex justify-center mb-2">
+                    <div className="w-8 h-8 bg-gradient-to-br from-indigo-400 to-purple-400 rounded-full flex items-center justify-center">
+                      <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div className="text-xl font-bold text-white mb-1">{result.advancedStats.longestStreak || 0}</div>
+                  <div className="text-sm font-semibold text-indigo-200 mb-1">Longest Streak</div>
+                  <div className="text-xs text-gray-300">Since {result.advancedStats.sinceFormatted || 'N/A'}</div>
+                </div>
               </div>
             </div>
 
-            {/* Activity Heatmap */}
-            <div className="mt-6">
-              <h3 className="text-lg font-semibold text-white mb-4">Transaction Heatmap</h3>
-              <ActivityHeatmap data={result.activityHeatmap} />
-            </div>
-    
             {/* Share Analysis Button */}
             <ShareAnalysisWithImage 
               result={result} 
               onShare={() => console.log('Analysis shared successfully!')}
             />
+
+            {/* Activity Heatmap */}
+            <div className="mt-6 -mx-1 sm:-mx-2 lg:-mx-3 bg-white rounded-lg p-4 sm:p-6 w-full">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Transaction Heatmap</h3>
+              <ActivityHeatmap data={result.activityHeatmap} />
+            </div>
 
             {/* Analysis Info */}
             <div className="mt-6 pt-4 border-t border-white/20">

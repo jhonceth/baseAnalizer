@@ -41,7 +41,7 @@ export async function getFarcasterManifest() {
       splashImageUrl: `${appUrl}/images/splash.png`,
       splashBackgroundColor: "#6D28D9",
       webhookUrl: `${appUrl}/api/webhook`,
-      subtitle: "Analyze Base wallet transactions", // 30 characters, no emojis or special characters, short description under app name
+      subtitle: "Analyze Base transactions", // 30 characters, no emojis or special characters, short description under app name
       description: "Analyze Base wallet transactions and activity patterns with detailed statistics and heatmaps", // 170 characters, no emojis or special characters, promotional message displayed on Mini App Page
       primaryCategory: "social",
       tags: ["base", "analytics", "wallet", "blockchain"], // up to 5 tags, filtering/search tags

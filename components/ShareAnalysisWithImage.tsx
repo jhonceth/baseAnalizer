@@ -33,20 +33,27 @@ export default function ShareAnalysisWithImage({ result, onShare }: ShareAnalysi
     setIsGenerating(true);
     
     try {
-      // Crear URL de la página de análisis
+      // Crear URL simple de la página de análisis con timestamp para evitar caché
       const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-      const analysisUrl = `${baseUrl}/base/${result.address}`;
+      const timestamp = Date.now();
+      const analysisUrl = `${baseUrl}/base/${result.address}?t=${timestamp}`;
 
       console.log('🔗 Generated analysis URL:', analysisUrl);
 
       // Crear texto del análisis
-      const shortAddress = `${result.address.slice(0, 6)}...${result.address.slice(-4)}`;
-      const text = `📊 Base Analytics Report for ${shortAddress}\n\n` +
+      const today = new Date().toLocaleDateString('en-US', {
+        timeZone: 'UTC',
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      
+      const text = `📊 My Base Analytics - ${today}\n\n` +
         `• ${result.counts.total} Total Transactions\n` +
         `• ${result.advancedStats.activeAgeFormatted} Active Age\n` +
         `• ${result.advancedStats.uniqueDays} Unique Days Active\n` +
-        `• ${result.advancedStats.longestStreak} Days Longest Streak\n\n` +
-        `View full analysis: ${analysisUrl}`;
+        `• ${result.advancedStats.longestStreak} Days Longest Streak`;
 
       setIsGenerating(false);
       setIsSharing(true);
@@ -58,7 +65,7 @@ export default function ShareAnalysisWithImage({ result, onShare }: ShareAnalysi
         if (sdk?.actions?.composeCast) {
           await sdk.actions.composeCast({
             text: text,
-            embeds: [analysisUrl], // Usar la URL de la página en lugar de la imagen directa
+            embeds: [analysisUrl],
           });
           console.log('✅ Shared analysis URL via Farcaster SDK');
         } else {
@@ -111,8 +118,9 @@ export default function ShareAnalysisWithImage({ result, onShare }: ShareAnalysi
           </>
         ) : (
           <>
-            <ImageIcon className="w-5 h-5" />
-            Share Analysis with Image
+            <img src="/images/farcaster.png" alt="Farcaster" className="w-5 h-5" />
+            <Share2 className="w-5 h-5" />
+            Analysis
           </>
         )}
       </Button>
