@@ -89,6 +89,7 @@ export default async function Image({ params }: { params: { address: string } })
               left: 0,
               right: 0,
               bottom: 0,
+              display: 'flex',
               backgroundImage: `url(${baseUrl}/images/baseback.png)`,
               backgroundSize: '1200px 800px',
               backgroundPosition: 'center center',
@@ -327,7 +328,8 @@ export default async function Image({ params }: { params: { address: string } })
                         marginBottom: '8px',
                       }}
                     >
-                      🧾 {data.counts.total || 0}
+                      <span style={{ fontSize: '32px', marginRight: '8px' }}>🧾</span>
+                      <span style={{ fontSize: '48px', fontWeight: '900' }}>{data.counts.total || 0}</span>
                     </div>
                     <div
                       style={{
@@ -369,7 +371,8 @@ export default async function Image({ params }: { params: { address: string } })
                         marginBottom: '8px',
                       }}
                     >
-                      ⏳ {data.advancedStats.activeAgeFormatted || '0d'}
+                      <span style={{ fontSize: '32px', marginRight: '8px' }}>⏳</span>
+                      <span style={{ fontSize: '48px', fontWeight: '900' }}>{data.advancedStats.activeAgeFormatted || '0d'}</span>
                     </div>
                     <div
                       style={{
@@ -422,7 +425,8 @@ export default async function Image({ params }: { params: { address: string } })
                         marginBottom: '8px',
                       }}
                     >
-                      📅 {data.advancedStats.uniqueDays || 0}
+                      <span style={{ fontSize: '32px', marginRight: '8px' }}>📅</span>
+                      <span style={{ fontSize: '48px', fontWeight: '900' }}>{data.advancedStats.uniqueDays || 0}</span>
                     </div>
                     <div
                       style={{
@@ -464,7 +468,8 @@ export default async function Image({ params }: { params: { address: string } })
                         marginBottom: '8px',
                       }}
                     >
-                      🔥 {data.advancedStats.longestStreak || 0} Days
+                      <span style={{ fontSize: '32px', marginRight: '8px' }}>🔥</span>
+                      <span style={{ fontSize: '48px', fontWeight: '900' }}>{data.advancedStats.longestStreak || 0} Days</span>
                     </div>
                     <div
                       style={{
@@ -490,7 +495,7 @@ export default async function Image({ params }: { params: { address: string } })
         width: 1200,
         height: 800,
         headers: {
-          'Cache-Control': 'public, max-age=31536000, immutable', // Cache por 1 año
+          'Cache-Control': 'public, max-age=31536000, s-maxage=31536000, immutable', // Cache estático por 1 año
           'ETag': `"${address}-${imageTimestamp}"`, // ETag único basado en dirección + timestamp
         },
       }
