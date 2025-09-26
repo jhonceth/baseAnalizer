@@ -105,3 +105,4 @@ Analyze your Base wallet: http://localhost:3000
 4. **Social**: Optimizada para compartir en redes sociales
 5. **Responsive**: Se adapta a diferentes tamaños de pantalla
 6. **Performante**: Generación rápida y eficiente
+

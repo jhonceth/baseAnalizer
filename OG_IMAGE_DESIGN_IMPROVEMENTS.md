@@ -183,3 +183,4 @@ Todos los elementos principales tienen `display: flex` como solicitaste:
 - ✅ Google Fonts con fallback
 
 ¡El diseño ahora es mucho más informativo y visualmente atractivo, mostrando toda la información relevante del usuario y las estadísticas de la wallet de manera clara y organizada! 🎉
+

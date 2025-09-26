@@ -111,3 +111,4 @@ http://localhost:3000/api/og/analysis?address=0x742d35Cc6634C0532925a3b8D4C9db96
 - **Formato**: SVG renderizado a PNG
 - **Tamaño**: 800x600px optimizado para redes sociales
 - **Compatibilidad**: Funciona en Vercel y otros proveedores que soporten Edge Runtime
+

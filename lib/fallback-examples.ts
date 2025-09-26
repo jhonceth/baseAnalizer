@@ -90,3 +90,5 @@ export const FALLBACK_EXAMPLES = {
     success: "Wallets cargadas correctamente",
   }
 };
+
+

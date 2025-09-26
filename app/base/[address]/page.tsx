@@ -62,7 +62,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
       version: "1",
       imageUrl: imageUrl,
       button: {
-        title: "📊 Analyze Wallet",
+        title: "📊 Analyze Address",
         action: {
           type: "launch_miniapp",
           url: `${baseUrl}/`, // Apuntar a la URL principal

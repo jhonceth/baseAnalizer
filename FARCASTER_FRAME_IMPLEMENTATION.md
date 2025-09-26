@@ -211,3 +211,4 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 - [Documentación oficial de Farcaster - Sharing](https://miniapps.farcaster.xyz/docs/guides/sharing)
 - [Herramienta de Debug de Warpcast](https://warpcast.com/~/developers/frames)
 - [GitHub: miniapp-img](https://github.com/farcasterxyz/miniapp-img)
+

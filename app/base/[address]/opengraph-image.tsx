@@ -76,12 +76,13 @@ export default async function Image({ params }: { params: { address: string } })
             display: 'flex',
             flexDirection: 'column',
             fontFamily: 'system-ui, sans-serif',
-            background: '#FFFFFF',
-            color: '#000000',
+            background: '#000D34', // Color de fondo azul oscuro
+            color: '#FFFFFF', // Texto blanco para contraste
             position: 'relative',
           }}
         >
-          {/* Imagen de fondo */}
+          {/* Imagen de fondo - COMENTADA */}
+          {/* 
           <div
             style={{
               position: 'absolute',
@@ -98,6 +99,7 @@ export default async function Image({ params }: { params: { address: string } })
               zIndex: 1,
             }}
           />
+          */}
           
           {/* Contenido principal con z-index mayor */}
           <div
@@ -110,36 +112,28 @@ export default async function Image({ params }: { params: { address: string } })
               flexDirection: 'column',
             }}
           >
-            {/* User Info - Barra horizontal superior ocupando todo el espacio */}
+            {/* Avatar grande directamente sobre el fondo */}
             <div
               style={{
                 position: 'absolute',
-                top: '20px',
-                left: '20px',
-                right: '20px',
+                top: '30px',
+                left: '30px',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'space-between',
-                background: 'rgba(255, 255, 255, 0.95)',
-                padding: '16px 24px',
-                borderRadius: '12px',
-                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-                border: '1px solid rgba(0, 0, 0, 0.1)',
+                gap: '20px',
               }}
             >
-              {/* Lado izquierdo - Avatar y datos del usuario */}
-              <div
+              {/* Avatar grande */}
+              <img
+                src={userProfile.farcaster?.avatar || `${baseUrl}/images/icon.png`}
+                alt="User Avatar"
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '16px',
+                  width: '120px',
+                  height: '120px',
+                  borderRadius: '50%',
+                  border: '4px solid rgba(255, 255, 255, 0.3)',
+                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
                 }}
-              >
-                {/* Avatar */}
-                <img
-                  src={userProfile.farcaster?.avatar || `${baseUrl}/images/icon.png`}
-                  alt="User Avatar"
-                  tw="w-16 h-16 rounded-full object-cover"
                 />
                 
                 {/* Username y FID */}
@@ -147,116 +141,96 @@ export default async function Image({ params }: { params: { address: string } })
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
-                  }}
-                >
-                  <div
-                    style={{
-                      display: 'flex',
-                      fontSize: '24px',
-                      fontWeight: '700',
-                      color: '#000000',
-                      lineHeight: '1.2',
-                    }}
-                  >
-                    {userProfile.farcaster?.displayName || userProfile.farcaster?.username || 'Farcaster User'}
-                  </div>
-                  <div
-                    style={{
-                      display: 'flex',
-                      fontSize: '18px',
-                      fontWeight: '500',
-                      color: 'rgba(0, 0, 0, 0.6)',
-                      lineHeight: '1.2',
-                    }}
-                  >
-                    FID: {userProfile.farcaster?.fid || 'N/A'}
-                  </div>
-                </div>
-              </div>
-
-              {/* Lado derecho - Address */}
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-end',
-                  flex: 1,
-                  marginLeft: '20px',
+                  gap: '8px',
                 }}
               >
                 <div
                   style={{
                     display: 'flex',
-                    fontSize: '20px',
-                    fontWeight: '600',
-                    color: 'rgba(0, 0, 0, 0.7)',
+                    fontSize: '32px',
+                    fontWeight: '800',
+                    color: '#FFFFFF',
                     lineHeight: '1.2',
-                    marginBottom: '8px',
+                    textShadow: '0 2px 8px rgba(0, 0, 0, 0.5)',
                   }}
                 >
-                  Address Analyzed:
+                  {userProfile.farcaster?.displayName || userProfile.farcaster?.username || 'Farcaster User'}
                 </div>
                 <div
                   style={{
                     display: 'flex',
-                    fontSize: '22px',
-                    fontWeight: '700',
-                    color: 'rgba(0, 0, 0, 0.9)',
+                    fontSize: '24px', // Más grande
+                    fontWeight: '600',
+                    color: 'rgba(255, 255, 255, 0.8)',
                     lineHeight: '1.2',
-                    fontFamily: 'monospace',
-                    background: 'rgba(0, 0, 0, 0.05)',
-                    padding: '8px 16px',
-                    borderRadius: '8px',
-                    border: '1px solid rgba(0, 0, 0, 0.1)',
+                    gap: '20px', // Espacio entre FID y Address
                   }}
                 >
-                  {address}
+                  <span>FID: {userProfile.farcaster?.fid || 'N/A'}</span>
+                  <span>Address: {address.slice(0, 6)}...{address.slice(-4)}</span>
                 </div>
               </div>
             </div>
 
-            {/* Main Content - Datos centrados */}
+            {/* Logo Base del lado derecho */}
             <div
               style={{
+                position: 'absolute',
+                top: '30px',
+                right: '30px',
                 display: 'flex',
-                flex: 1,
-                flexDirection: 'column',
-                justifyContent: 'center',
                 alignItems: 'center',
-                padding: '40px',
               }}
             >
-              {/* Título principal */}
+              <img
+                src={`${baseUrl}/images/base.png`}
+                alt="Base Logo"
+                style={{
+                  width: '120px',
+                  height: '120px',
+                  objectFit: 'contain',
+                }}
+              />
+            </div>
+
+              {/* Main Content - Datos centrados */}
               <div
                 style={{
                   display: 'flex',
+                  flex: 1,
                   flexDirection: 'column',
+                  justifyContent: 'flex-start',
                   alignItems: 'center',
-                  marginBottom: '30px',
-                  marginTop: '120px',
+                  padding: '40px',
+                  paddingTop: '180px', // Subido más el contenido
                 }}
               >
                 {/* Título principal */}
                 <div
                   style={{
                     display: 'flex',
-                    fontSize: '48px',
-                    fontWeight: '900',
-                    color: '#000000',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    marginBottom: '15px', // Reducido el espacio
+                  }}
+                >
+                {/* Título principal */}
+                <div
+                  style={{
+                    display: 'flex',
+                    fontSize: '56px', // Letras más grandes
+                    fontWeight: 'bold', // Peso Bold
+                    color: '#FFFFFF', // Texto blanco para el fondo azul
                     textAlign: 'center',
                     alignItems: 'center',
                     justifyContent: 'center',
                     letterSpacing: '3px',
-                    textShadow: '0 3px 6px rgba(0, 0, 0, 0.15)',
-                    background: 'rgba(255, 255, 255, 0.9)',
-                    padding: '25px 50px',
-                    borderRadius: '16px',
-                    boxShadow: '0 6px 20px rgba(0, 0, 0, 0.25)',
+                    textTransform: 'uppercase', // Mayúsculas
                     fontFamily: 'system-ui, -apple-system, sans-serif',
                     marginBottom: '12px',
                   }}
                 >
-                  MY ACTIVITY IN BASE NETWORK
+                  MY ACTIVITY IN BASE
                 </div>
                 
                 {/* Subtítulo */}
@@ -265,15 +239,11 @@ export default async function Image({ params }: { params: { address: string } })
                     display: 'flex',
                     fontSize: '20px',
                     fontWeight: '500',
-                    color: 'rgba(0, 0, 0, 0.7)',
+                    color: 'rgba(255, 255, 255, 0.9)', // Texto blanco semi-transparente
                     textAlign: 'center',
                     alignItems: 'center',
                     justifyContent: 'center',
                     letterSpacing: '1px',
-                    background: 'rgba(255, 255, 255, 0.7)',
-                    padding: '12px 30px',
-                    borderRadius: '12px',
-                    boxShadow: '0 3px 10px rgba(0, 0, 0, 0.15)',
                     fontFamily: 'system-ui, -apple-system, sans-serif',
                   }}
                 >
@@ -281,7 +251,7 @@ export default async function Image({ params }: { params: { address: string } })
                 </div>
               </div>
 
-              {/* Stats Grid - Nueva distribución con iconos */}
+              {/* Stats Grid - Layout original sin cuadros de colores */}
               <div
                 style={{
                   display: 'flex',
@@ -289,8 +259,8 @@ export default async function Image({ params }: { params: { address: string } })
                   alignItems: 'center',
                   width: '100%',
                   padding: '0 20px',
-                  gap: '20px',
-                  marginTop: '20px',
+                  gap: '8px', // Reducido el espacio entre filas
+                  marginTop: '5px', // Reducido el margen superior
                 }}
               >
                 {/* Primera fila - Transactions y Active Age */}
@@ -310,39 +280,41 @@ export default async function Image({ params }: { params: { address: string } })
                       flexDirection: 'column',
                       alignItems: 'center',
                       width: '45%',
-                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                      borderRadius: '12px',
                       padding: '20px',
-                      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
                       minHeight: '140px',
                     }}
                   >
+                    {/* Título arriba */}
                     <div
                       style={{
                         display: 'flex',
-                        fontSize: '48px',
+                        fontSize: '20px',
+                        fontWeight: '600',
+                        color: '#FFD700',
+                        textAlign: 'center',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                        marginBottom: '8px',
+                      }}
+                    >
+                      TRANSACTIONS
+                    </div>
+                    <div
+                      style={{
+                        display: 'flex',
+                        fontSize: '72px',
                         fontWeight: '900',
                         color: '#FFFFFF',
                         alignItems: 'center',
                         justifyContent: 'center',
                         marginBottom: '8px',
+                        fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                        letterSpacing: '-0.02em',
                       }}
                     >
-                      <span style={{ fontSize: '32px', marginRight: '8px' }}>🧾</span>
-                      <span style={{ fontSize: '48px', fontWeight: '900' }}>{data.counts.total || 0}</span>
-                    </div>
-                    <div
-                      style={{
-                        display: 'flex',
-                        fontSize: '22px',
-                        fontWeight: '700',
-                        color: '#FFFFFF',
-                        textAlign: 'center',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      Transactions
+                      <span style={{ fontSize: '48px', marginRight: '8px' }}>🧾</span>
+                      <span style={{ fontSize: '72px', fontWeight: '900', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>{data.counts.total || 0}</span>
                     </div>
                   </div>
                   
@@ -353,39 +325,41 @@ export default async function Image({ params }: { params: { address: string } })
                       flexDirection: 'column',
                       alignItems: 'center',
                       width: '45%',
-                      background: 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)',
-                      borderRadius: '12px',
                       padding: '20px',
-                      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
                       minHeight: '140px',
                     }}
                   >
+                    {/* Título arriba */}
                     <div
                       style={{
                         display: 'flex',
-                        fontSize: '48px',
+                        fontSize: '20px',
+                        fontWeight: '600',
+                        color: '#FFD700',
+                        textAlign: 'center',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                        marginBottom: '8px',
+                      }}
+                    >
+                      ACTIVE AGE
+                    </div>
+                    <div
+                      style={{
+                        display: 'flex',
+                        fontSize: '72px',
                         fontWeight: '900',
                         color: '#FFFFFF',
                         alignItems: 'center',
                         justifyContent: 'center',
                         marginBottom: '8px',
+                        fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                        letterSpacing: '-0.02em',
                       }}
                     >
-                      <span style={{ fontSize: '32px', marginRight: '8px' }}>⏳</span>
-                      <span style={{ fontSize: '48px', fontWeight: '900' }}>{data.advancedStats.activeAgeFormatted || '0d'}</span>
-                    </div>
-                    <div
-                      style={{
-                        display: 'flex',
-                        fontSize: '22px',
-                        fontWeight: '700',
-                        color: '#FFFFFF',
-                        textAlign: 'center',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      Active Age
+                      <span style={{ fontSize: '48px', marginRight: '8px' }}>⏳</span>
+                      <span style={{ fontSize: '72px', fontWeight: '900', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>{data.advancedStats.activeAgeFormatted || '0d'}</span>
                     </div>
                   </div>
                 </div>
@@ -398,6 +372,7 @@ export default async function Image({ params }: { params: { address: string } })
                     alignItems: 'center',
                     width: '100%',
                     gap: '20px',
+                    marginTop: '-15px', // Subido más
                   }}
                 >
                   {/* Active Days */}
@@ -407,39 +382,41 @@ export default async function Image({ params }: { params: { address: string } })
                       flexDirection: 'column',
                       alignItems: 'center',
                       width: '45%',
-                      background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-                      borderRadius: '12px',
                       padding: '20px',
-                      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
                       minHeight: '140px',
                     }}
                   >
+                    {/* Título arriba */}
                     <div
                       style={{
                         display: 'flex',
-                        fontSize: '48px',
+                        fontSize: '20px',
+                        fontWeight: '600',
+                        color: '#FFD700',
+                        textAlign: 'center',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                        marginBottom: '8px',
+                      }}
+                    >
+                      ACTIVE DAYS
+                    </div>
+                    <div
+                      style={{
+                        display: 'flex',
+                        fontSize: '72px',
                         fontWeight: '900',
                         color: '#FFFFFF',
                         alignItems: 'center',
                         justifyContent: 'center',
                         marginBottom: '8px',
+                        fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                        letterSpacing: '-0.02em',
                       }}
                     >
-                      <span style={{ fontSize: '32px', marginRight: '8px' }}>📅</span>
-                      <span style={{ fontSize: '48px', fontWeight: '900' }}>{data.advancedStats.uniqueDays || 0}</span>
-                    </div>
-                    <div
-                      style={{
-                        display: 'flex',
-                        fontSize: '22px',
-                        fontWeight: '700',
-                        color: '#FFFFFF',
-                        textAlign: 'center',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      Active Days
+                      <span style={{ fontSize: '48px', marginRight: '8px' }}>📅</span>
+                      <span style={{ fontSize: '72px', fontWeight: '900', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>{data.advancedStats.uniqueDays || 0}</span>
                     </div>
                   </div>
                   
@@ -450,39 +427,239 @@ export default async function Image({ params }: { params: { address: string } })
                       flexDirection: 'column',
                       alignItems: 'center',
                       width: '45%',
-                      background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-                      borderRadius: '12px',
                       padding: '20px',
-                      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
                       minHeight: '140px',
                     }}
                   >
+                    {/* Título arriba */}
                     <div
                       style={{
                         display: 'flex',
-                        fontSize: '48px',
+                        fontSize: '20px',
+                        fontWeight: '600',
+                        color: '#FFD700',
+                        textAlign: 'center',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                        marginBottom: '8px',
+                      }}
+                    >
+                      LONGEST STREAK
+                    </div>
+                    <div
+                      style={{
+                        display: 'flex',
+                        fontSize: '72px',
                         fontWeight: '900',
                         color: '#FFFFFF',
                         alignItems: 'center',
                         justifyContent: 'center',
                         marginBottom: '8px',
+                        fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                        letterSpacing: '-0.02em',
                       }}
                     >
-                      <span style={{ fontSize: '32px', marginRight: '8px' }}>🔥</span>
-                      <span style={{ fontSize: '48px', fontWeight: '900' }}>{data.advancedStats.longestStreak || 0} Days</span>
+                      <span style={{ fontSize: '48px', marginRight: '8px' }}>🔥</span>
+                      <span style={{ fontSize: '72px', fontWeight: '900', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>{data.advancedStats.longestStreak || 0} Days</span>
                     </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Termómetro de Niveles - Pie de página */}
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: '30px',
+                  left: '30px',
+                  right: '30px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '12px',
+                }}
+              >
+                {/* Título del termómetro */}
+                <div
+                  style={{
+                    fontSize: '24px',
+                    fontWeight: '700',
+                    color: '#FFD700',
+                    textAlign: 'center',
+                    fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                  }}
+                >
+                  ACTIVITY LEVEL
+                </div>
+                
+                {/* Termómetro horizontal */}
+                <div
+                  style={{
+                    display: 'flex',
+                    width: '100%',
+                    height: '40px',
+                    background: '#FFFFFF',
+                    borderRadius: '20px',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    border: '2px solid rgba(255,255,255,0.3)',
+                  }}
+                >
+                  {/* Llenado dinámico según datos del usuario */}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: '0',
+                      left: '0',
+                      bottom: '0',
+                      width: `${(() => {
+                        const total = data.counts.total || 0;
+                        
+                        // Primera escala: 0-1000 (25% del termómetro)
+                        if (total < 1000) {
+                          return `${(total / 1000) * 25}%`;
+                        }
+                        
+                        // Segunda escala: 1000-5000 (25% del termómetro)
+                        if (total < 5000) {
+                          const progress = (total - 1000) / (5000 - 1000);
+                          return `${25 + (progress * 25)}%`;
+                        }
+                        
+                        // Tercera escala: 5000-20000 (25% del termómetro)
+                        if (total < 20000) {
+                          const progress = (total - 5000) / (20000 - 5000);
+                          return `${50 + (progress * 25)}%`;
+                        }
+                        
+                        // Cuarta escala: 20000-50000 (25% del termómetro)
+                        if (total < 50000) {
+                          const progress = (total - 20000) / (50000 - 20000);
+                          return `${75 + (progress * 25)}%`;
+                        }
+                        
+                        return '100%';
+                      })()}`,
+                      background: `${(() => {
+                        const total = data.counts.total || 0;
+                        if (total < 1000) return '#8A2BE2'; // Púrpura
+                        if (total < 5000) return '#FFA500'; // Naranja
+                        if (total < 20000) return '#87CEEB'; // Azul claro
+                        if (total < 50000) return '#90EE90'; // Verde claro
+                        return '#90EE90'; // Verde claro
+                      })()}`,
+                      borderRadius: '18px',
+                      transition: 'width 0.3s ease',
+                    }}
+                  />
+                  
+                  {/* Marcadores de niveles - 4 cuadros iguales */}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: '0',
+                      left: '0',
+                      right: '0',
+                      bottom: '0',
+                      display: 'flex',
+                      alignItems: 'center',
+                    }}
+                  >
+                    {/* Líneas divisorias en posiciones exactas */}
+                    <div style={{ position: 'absolute', left: '25%', width: '2px', height: '100%', background: 'rgba(0,0,0,0.2)' }} />
+                    <div style={{ position: 'absolute', left: '50%', width: '2px', height: '100%', background: 'rgba(0,0,0,0.2)' }} />
+                    <div style={{ position: 'absolute', left: '75%', width: '2px', height: '100%', background: 'rgba(0,0,0,0.2)' }} />
+                  </div>
+                </div>
+                
+                {/* Etiquetas de niveles */}
+                <div
+                  style={{
+                    display: 'flex',
+                    width: '100%',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    padding: '0 10px',
+                  }}
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                    }}
+                  >
                     <div
                       style={{
-                        display: 'flex',
-                        fontSize: '22px',
+                        fontSize: '24px',
                         fontWeight: '700',
                         color: '#FFFFFF',
                         textAlign: 'center',
-                        alignItems: 'center',
-                        justifyContent: 'center',
+                        fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
                       }}
                     >
-                      Longest Stk
+                      GOOD FLOW
+                    </div>
+                  </div>
+                  
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: '24px',
+                        fontWeight: '700',
+                        color: '#FFFFFF',
+                        textAlign: 'center',
+                        fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                      }}
+                    >
+                      GROWING
+                    </div>
+                  </div>
+                  
+                    <div
+                      style={{
+                        display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: '24px',
+                        fontWeight: '700',
+                        color: '#FFFFFF',
+                        textAlign: 'center',
+                        fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                      }}
+                    >
+                      VIRAL
+                    </div>
+                  </div>
+                  
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                        alignItems: 'center',
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: '24px',
+                        fontWeight: '700',
+                        color: '#FFFFFF',
+                        textAlign: 'center',
+                        fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                      }}
+                    >
+                      GOD MODE
                     </div>
                   </div>
                 </div>

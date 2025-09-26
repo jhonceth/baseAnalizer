@@ -131,3 +131,4 @@ El proyecto ahora:
 5. **Caché**: Optimizado para reducir carga en el servidor
 
 ¡El proyecto está ahora completamente funcional y listo para despliegue en Vercel! 🚀
+

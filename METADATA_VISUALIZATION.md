@@ -168,3 +168,4 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 4. **Personalizar:** Modifica los metadatos según tus necesidades
 
 ¡Ahora puedes ver exactamente cómo funcionan los metadatos dinámicos vs estáticos! 🎉
+

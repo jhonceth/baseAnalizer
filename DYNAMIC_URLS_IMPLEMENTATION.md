@@ -180,3 +180,4 @@ Si las redes sociales no muestran la imagen:
 - **Tamaño**: 800x600px optimizado para redes sociales
 - **Compatibilidad**: Funciona en Vercel y otros proveedores
 - **Fuentes**: Usa fuentes del sistema para evitar problemas
+

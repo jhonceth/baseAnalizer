@@ -174,3 +174,4 @@ https://tu-dominio.com/base/0x9b99b5EF89b5532263091ee2f61C93B263E8c15B
 5. **Caché**: Next.js maneja el caché automáticamente
 
 ¡Ahora el sistema funciona correctamente con Farcaster y todas las plataformas sociales! 🎉
+

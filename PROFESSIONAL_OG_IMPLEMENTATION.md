@@ -166,3 +166,4 @@ http://localhost:3000/api/og/analysis?address=0x9b99b5EF89b5532263091ee2f61C93B2
 - **Caché**: 5 minutos para imágenes generadas
 - **Formato**: SVG renderizado a PNG
 - **Compatibilidad**: Funciona en Vercel y otros proveedores Edge
+
